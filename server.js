@@ -165,11 +165,59 @@ let tarefas = [
   },
 ];
 
-
-
 app.get("/", (req, res) => {
   res.json({ api: "TaskFlow", versao: "1.0", status: "online" });
 });
+
+//-----ESTATISTICAS-----
+// GET /estatisticas — listar todas as tarefas
+// app.get("/estatisticas", (req, res) => {
+//   //   res.json(tarefas);
+
+//   const { coluna, prioridade } = req.query;
+
+//   console.log(coluna);
+//   // Começar com todas as tarefas
+//   let resultadoEsta = tarefas;
+//   // let filterColuna = (t) => t.coluna.length;
+//   // let filterPrioridade = (t) => t.prioridade.length;
+
+//   // Filtrar por coluna se informado
+//   if (coluna) {
+//     resultadoEsta = resultadoEsta.filter((t) => t.coluna === coluna);
+//   }
+
+//   if (prioridade) {
+//     resultadoEsta = resultadoEsta.filter((t) => t.prioridade === prioridade);
+//   }
+
+//   res.json(resultadoEsta.length);
+// });
+
+// // GET /estatisticas — listar todas as tarefas
+// app.get("/estatisticas/resumo", (req, res) => {
+//   //   res.json(tarefas);
+
+//   const { coluna, prioridade } = req.query;
+
+//   console.log(coluna);
+//   // Começar com todas as tarefas
+//   let resultadoEsta = tarefas;
+//   // let filterColuna = (t) => t.coluna.length;
+//   // let filterPrioridade = (t) => t.prioridade.length;
+//   // let filterColuna
+//   // let filterPrioridade
+//   // Filtrar por coluna se informado
+//   if (coluna) {
+//     resultadoEsta = resultadoEsta.filter((t) => t.coluna === coluna);
+//   }
+
+//   if (prioridade) {
+//     resultadoEsta = resultadoEsta.filter((t) => t.prioridade === prioridade);
+//   }
+
+//   res.json(`Você tem ${resultadoEsta.length} tarefas`);
+// });
 
 // GET /tarefas — listar todas as tarefas
 app.get("/tarefas", (req, res) => {
