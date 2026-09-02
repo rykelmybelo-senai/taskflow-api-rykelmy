@@ -1,4 +1,4 @@
-let usuarios = [
+let listaUsuarios = [
   {
     id: 1,
     nome: "Ronaldo",
@@ -29,7 +29,7 @@ const usuariosController = {
     console.log(nome);
     console.log(email);
     // Começar com todas os usuarios
-    let resultadoUser = usuarios;
+    let resultadoUser = listaUsuarios;
 
     // Filtrar por id se informado
     if (id) {
@@ -51,7 +51,7 @@ const usuariosController = {
 
   buscarUsuarioPorId: (req, res) => {
     const id = parseInt(req.params.id);
-    const usuario = usuarios.find((u) => u.id === id);
+    const usuario = listaUsuarios.find((u) => u.id === id);
     if (!usuario) {
       return res.status(404).json({ erro: "Usuário não encontrado!" });
     }
@@ -65,7 +65,7 @@ const usuariosController = {
         .status(400)
         .json({ erro: "Nome, email e senha são obrigatórios!" });
 
-    if (usuarios.find((u) => u.email === email))
+    if (listaUsuarios.find((u) => u.email === email))
       return res
         .status(400)
         .json({ erro: "Email já cadastrado, informe outro email!" });
@@ -77,14 +77,14 @@ const usuariosController = {
       senha: senha,
     };
 
-    usuarios.push(novoUsuario);
+    listaUsuarios.push(novoUsuario);
     res.status(201).json(novoUsuario);
   },
 
   atualizarUsuario: (req, res) => {
     const id = parseInt(req.params.id);
     const { nome, email, senha } = req.body;
-    const indice = usuarios.findIndex((u) => u.id === id);
+    const indice = listaUsuarios.findIndex((u) => u.id === id);
 
     // Se não encontrou — retornar 404
     if (indice === -1) {
@@ -93,7 +93,7 @@ const usuariosController = {
 
     // Substituir o usuario no array mantendo o mesmo ID
     const usuarioAtualizado = { id, nome, email, senha };
-    usuarios[indice] = usuarioAtualizado;
+    listaUsuarios[indice] = usuarioAtualizado;
 
     // Retornar o usuario atualizado com status 200
     res.json(usuarioAtualizado);
@@ -101,14 +101,14 @@ const usuariosController = {
 
   deletarUsuario: (req, res) => {
     const id = parseInt(req.params.id);
-    const indice = usuarios.findIndex((u) => u.id === id);
+    const indice = listaUsuarios.findIndex((u) => u.id === id);
 
     if (indice === -1) {
       return res.status(404).json({ erro: "Usuario não encontrado" });
     }
 
     // Remover do array
-    const removida = usuarios.splice(indice, 1)[0];
+    const removida = listaUsuarios.splice(indice, 1)[0];
 
     // Retornar confirmação da remoção
     res.json({ mensagem: "Usuario removido com sucesso", tarefa: removida });
