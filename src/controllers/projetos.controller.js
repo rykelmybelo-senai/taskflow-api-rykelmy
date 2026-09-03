@@ -25,8 +25,16 @@ const projetosController = {
     listarProjetos: (req, res) => {
         const { status } = req.query;
         let resultado = listaProjetos;
+        const notStatus = listaProjetos.findIndex((p) => p.status === status);
+
+        if (notStatus === -1 && status) {
+            return res.status(404).json({ message: "Status não encontrado, procure por ativo ou inativo." }); 
+        }
         if (status) {
             resultado = resultado.filter((p) => p.status === status);
+        }
+        if (!status && Object.keys(req.query).length > 0) {
+            return res.status(400).json({ message: "Filtro inválido, busque por um status válido." });
         }
         res.json(resultado);
     },
