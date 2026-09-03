@@ -23,27 +23,31 @@ let proximoId = 4;
 
 const usuariosController = {
   listarUsuarios: (req, res) => {
-    let { id, nome, email } = req.query;
-
-    console.log(id);
-    console.log(nome);
-    console.log(email);
+    const { nome, email } = req.query;
     // Começar com todas os usuarios
     let resultadoUser = listaUsuarios;
+    const notNome = listaUsuarios.findIndex((u) => u.nome === nome);
+    const notEmail = listaUsuarios.findIndex((u) => u.email === email);
 
-    // Filtrar por id se informado
-    if (id) {
-      resultadoUser = resultadoUser.filter((u) => u.id === id);
+    if (notNome === -1 && nome) {
+      return res.status(404).json({ message: "Nome não encontrado." });
+    }
+    if (notEmail === -1 && email) {
+      return res.status(404).json({ message: "Email não encontrado." });
     }
 
     // Filtrar por nome se informado
     if (nome) {
-      resultadoUser = resultadoUser.filter((u) => u.nome === nome);
+      resultadoUser = listaUsuarios.filter((u) => u.nome === nome);
     }
 
     // Filtrar por email se informado
     if (email) {
-      resultadoUser = resultadoUser.filter((u) => u.email === email);
+      resultadoUser = listaUsuarios.filter((u) => u.email === email);
+    }
+
+    if (!nome && !email && Object.keys(req.query).length > 0) {
+      return res.status(400).json({ message: "Filtro inválido, busque por um nome ou email válido." });
     }
 
     res.json(resultadoUser);
