@@ -2,7 +2,6 @@ const tarefasModel = require("../models/tarefas.model");
 
 const tarefasController = {
   listarTarefas (req, res) {
-    const { coluna, prioridade } = req.query;
     let resultado = tarefasModel.listarTarefas();
     res.json(resultado);
   },

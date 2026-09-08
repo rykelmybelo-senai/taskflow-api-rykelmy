@@ -1,39 +1,17 @@
-let listaProjetos = [
-    {
-        id: 1,
-        nome: "Projeto 1",
-        descricao: "Descrição do Projeto 1",
-        status: "ativo",
-    },
-    {
-        id: 2,
-        nome: "Projeto 2",
-        descricao: "Descrição do Projeto 2",
-        status: "ativo",
-    },
-    {
-        id: 3,
-        nome: "Projeto 3",
-        descricao: "Descrição do Projeto 3",
-        status: "inativo",
-    }
-];
-
-let proximoIdProjeto = 4;
+const listaProjetos = require("../models/projetos.model");
 
 const projetosController = {
     listarProjetos: (req, res) => {
-        const { status } = req.query;
-        let resultado = listaProjetos;
-        const notStatus = listaProjetos.findIndex((p) => p.status === status);
+        const { nome, status } = req.query;
+        let resultado = listaProjetos.listarProjetos(nome, status);
 
-        if (notStatus === -1 && status) {
+        if (nome && resultado.length === 0) {
+            return res.status(404).json({ message: "Nome não encontrado." });
+        }
+        if (status && status !== "ativo" && status !== "inativo") {
             return res.status(404).json({ message: "Status não encontrado, procure por ativo ou inativo." }); 
         }
-        if (status) {
-            resultado = resultado.filter((p) => p.status === status);
-        }
-        if (!status && Object.keys(req.query).length > 0) {
+        if (!status && !nome && Object.keys(req.query).length > 0) {
             return res.status(400).json({ message: "Filtro inválido, busque por um status válido." });
         }
         res.json(resultado);
@@ -41,7 +19,7 @@ const projetosController = {
 
     buscarProjetoPorId: (req, res) => {
         const id = parseInt(req.params.id);
-        const projeto = listaProjetos.find((p) => p.id === id);
+        const projeto = listaProjetos.buscarProjetoPorId(id);
         if (!projeto) {
             return res.status(404).json({ message: "Projeto não encontrado" });
         }
@@ -51,36 +29,29 @@ const projetosController = {
     criarProjeto: (req, res) => {
         const { nome, descricao, status } = req.body;
 
-        if (!nome) return res.status(400).json({ erro: "Nome do projeto é obrigatório" });
-
-        const novoProjeto = {
-            id: proximoIdProjeto++,
-            nome: nome,
-            descricao: descricao,
-            status: status || "ativo",
-        };
-        listaProjetos.push(novoProjeto);
+        if (!nome) return res.status(400).json({ erro: "Nome do projeto é obrigatório." });
+        const novoProjeto = listaProjetos.criarProjeto({ nome, descricao, status });
         res.status(201).json(novoProjeto);
     },
 
     atualizarProjeto: (req, res) => {
         const id = parseInt(req.params.id);
-        const idx = listaProjetos.findIndex((p) => p.id === id);
-
-        if (idx === -1)
+        const { nome, descricao, status } = req.body;
+        const projeto = listaProjetos.atualizarProjeto({ id, nome, descricao, status });
+        
+        if (!projeto) {
             return res.status(404).json({ message: "Projeto não encontrado" });
-        listaProjetos[idx] = { ...listaProjetos[idx], ...req.body, id };
-        res.json(listaProjetos[idx]);
+        }
+        res.json(projeto);
     },
 
     deletarProjeto: (req, res) => {
         const id = parseInt(req.params.id);
-        const idx = listaProjetos.findIndex((p) => p.id === id);
 
-        if (idx === -1) {
+        if (!listaProjetos.buscarProjetoPorId(id)) {
             return res.status(404).json({ message: "Projeto não encontrado" });
         }
-        const removido = listaProjetos.splice(idx, 1)[0];
+        const removido = listaProjetos.deletarProjeto(id);
         res.json({ message: "Projeto removido", projeto: removido });
     },
 };

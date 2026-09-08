@@ -29,10 +29,22 @@ module.exports = {
     const totalTarefas = listaTarefas;
     return totalTarefas;
   },
-  listarPorColuna: (coluna) => listaTarefas.filter((t) => t.coluna === coluna),
-  listarPorPrioridade: (prioridade) => listaTarefas.filter((t) => t.prioridade === prioridade),
-  listarPorCidade: (cidade) => listaTarefas.filter((t) => t.cidade === cidade),
-  buscarPorId: (id) => listaTarefas.find((t) => t.id === id),
+  listarPorColuna: (coluna) => {
+    const totalPorColuna = listaTarefas.filter((t) => t.coluna === coluna);
+    return totalPorColuna;
+  },
+  listarPorPrioridade: (prioridade) => {
+    const totalPorPrioridade = listaTarefas.filter((t) => t.prioridade === prioridade);
+    return totalPorPrioridade;
+  },
+  listarPorCidade: (cidade) => {
+    const totalPorCidade = listaTarefas.filter((t) => t.cidade === cidade);
+    return totalPorCidade;
+  },
+  buscarPorId: (id) => {
+    const totalPorId = listaTarefas.find((t) => t.id === id);
+    return totalPorId;
+  },
   criarTarefa: ({ texto, prioridade, coluna, cidade }) => {
     const novaTarefa = {
       id: proximoId++,

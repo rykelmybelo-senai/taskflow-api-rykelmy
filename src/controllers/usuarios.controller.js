@@ -1,52 +1,18 @@
-let listaUsuarios = [
-  {
-    id: 1,
-    nome: "Ronaldo",
-    email: "ronaldouserteste@email.com",
-    senha: "@Teste1234",
-  },
-  {
-    id: 2,
-    nome: "Marcelo",
-    email: "marcelouserteste@email.com",
-    senha: "@TesteSenai@456",
-  },
-  {
-    id: 3,
-    nome: "Cleide",
-    email: "cleideuserteste@email.com",
-    senha: "@Teste@321",
-  },
-];
-
-let proximoId = 4;
+const usuariosModel = require("../models/usuarios.model");
 
 const usuariosController = {
   listarUsuarios: (req, res) => {
     const { nome, email } = req.query;
     // Começar com todas os usuarios
-    let resultadoUser = listaUsuarios;
-    const notNome = listaUsuarios.findIndex((u) => u.nome === nome);
-    const notEmail = listaUsuarios.findIndex((u) => u.email === email);
+    let resultadoUser = usuariosModel.listarUsuarios(nome, email);
 
-    if (notNome === -1 && nome) {
+    if (resultadoUser.length === 0 && nome) {
       return res.status(404).json({ message: "Nome não encontrado." });
     }
-    if (notEmail === -1 && email) {
+    if (resultadoUser.length === 0 && email) {
       return res.status(404).json({ message: "Email não encontrado." });
     }
-
-    // Filtrar por nome se informado
-    if (nome) {
-      resultadoUser = listaUsuarios.filter((u) => u.nome === nome);
-    }
-
-    // Filtrar por email se informado
-    if (email) {
-      resultadoUser = listaUsuarios.filter((u) => u.email === email);
-    }
-
-    if (!nome && !email && Object.keys(req.query).length > 0) {
+    if (!nome && !email && resultadoUser.length === 0) {
       return res.status(400).json({ message: "Filtro inválido, busque por um nome ou email válido." });
     }
 
@@ -55,7 +21,7 @@ const usuariosController = {
 
   buscarUsuarioPorId: (req, res) => {
     const id = parseInt(req.params.id);
-    const usuario = listaUsuarios.find((u) => u.id === id);
+    const usuario = usuariosModel.buscarUsuarioPorId(id);
     if (!usuario) {
       return res.status(404).json({ erro: "Usuário não encontrado!" });
     }
@@ -69,53 +35,34 @@ const usuariosController = {
         .status(400)
         .json({ erro: "Nome, email e senha são obrigatórios!" });
 
-    if (listaUsuarios.find((u) => u.email === email))
+    if (usuariosModel.buscarUsuarioPorEmail(email))
       return res
         .status(400)
         .json({ erro: "Email já cadastrado, informe outro email!" });
-
-    const novoUsuario = {
-      id: proximoId++,
-      nome: nome,
-      email: email,
-      senha: senha,
-    };
-
-    listaUsuarios.push(novoUsuario);
-    res.status(201).json(novoUsuario);
+    res.status(201).json({ mensagem: "Usuário criado com sucesso!", usuario: usuariosModel.criarUsuario({ nome, email, senha }) });
   },
 
   atualizarUsuario: (req, res) => {
     const id = parseInt(req.params.id);
     const { nome, email, senha } = req.body;
-    const indice = listaUsuarios.findIndex((u) => u.id === id);
 
     // Se não encontrou — retornar 404
-    if (indice === -1) {
+    if (usuariosModel.buscarUsuarioPorId(id) === undefined) {
       return res.status(404).json({ erro: "Usuario não encontrado" });
     }
-
-    // Substituir o usuario no array mantendo o mesmo ID
-    const usuarioAtualizado = { id, nome, email, senha };
-    listaUsuarios[indice] = usuarioAtualizado;
-
     // Retornar o usuario atualizado com status 200
-    res.json(usuarioAtualizado);
+    res.json({ mensagem: "Usuario atualizado com sucesso", usuario: usuariosModel.atualizarUsuario(id, { nome, email, senha }) });
   },
 
   deletarUsuario: (req, res) => {
     const id = parseInt(req.params.id);
-    const indice = listaUsuarios.findIndex((u) => u.id === id);
 
-    if (indice === -1) {
+    if (usuariosModel.buscarUsuarioPorId(id) === undefined) {
       return res.status(404).json({ erro: "Usuario não encontrado" });
     }
 
-    // Remover do array
-    const removida = listaUsuarios.splice(indice, 1)[0];
-
     // Retornar confirmação da remoção
-    res.json({ mensagem: "Usuario removido com sucesso", tarefa: removida });
+    res.json({ mensagem: "Usuario removido com sucesso", usuario: usuariosModel.deletarUsuario(id) });
   },
 };
 
