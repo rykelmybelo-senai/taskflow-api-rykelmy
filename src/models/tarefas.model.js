@@ -4,21 +4,21 @@ let listaTarefas = [
     texto: "Estudar Node",
     prioridade: "alta",
     coluna: "afazer",
-    cidade: "Natal/RN",
+    cidade: "Natal-RN",
   },
   {
     id: 2,
     texto: "Criar API",
     prioridade: "media",
     coluna: "andamento",
-    cidade: "Natal/RN",
+    cidade: "Natal-RN",
   },
   {
     id: 3,
     texto: "Testar Postman",
     prioridade: "baixa",
     coluna: "concluida",
-    cidade: "Natal/RN",
+    cidade: "Natal-RN",
   },
 ];
 

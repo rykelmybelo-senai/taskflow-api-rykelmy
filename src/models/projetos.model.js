@@ -23,7 +23,7 @@ let proximoIdProjeto = 4;
 
 module.exports = {
     listarProjetos: (nome, status) => {
-        const resultado = listaProjetos;
+        let resultado = listaProjetos;
 
         if (nome) {
             resultado = listaProjetos.filter((p) => p.nome === nome);
@@ -34,10 +34,7 @@ module.exports = {
         return resultado;
     },
 
-    buscarProjetoPorId: (id) => {
-        const projeto = listaProjetos.find((p) => p.id === id);
-        return projeto;
-    },
+    buscarProjetoPorId: (id) => listaProjetos.find((p) => p.id === id),
 
     criarProjeto: ({ nome, descricao, status }) => {
 
@@ -54,11 +51,13 @@ module.exports = {
     atualizarProjeto: ({ id, nome, descricao, status }) => {
         const idx = listaProjetos.findIndex((p) => p.id === id);
 
-        listaProjetos[idx] = { ...listaProjetos[idx], nome, descricao, status };
+        if (idx === -1) return null;
+
+        listaProjetos[idx] = { ...listaProjetos[idx], nome: nome ?? listaProjetos[idx].nome, descricao: descricao ?? listaProjetos[idx].descricao, status: status ?? listaProjetos[idx].status };
         return listaProjetos[idx];
     },
 
-    deletarProjeto: ({ id }) => {
+    deletarProjeto: (id) => {
         const idx = listaProjetos.findIndex((p) => p.id === id);
         if (idx === -1) {
             return null;

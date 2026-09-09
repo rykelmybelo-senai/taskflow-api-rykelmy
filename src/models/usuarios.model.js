@@ -23,7 +23,7 @@ let proximoId = 4;
 
 module.exports = {
   listarUsuarios: (nome, email) => {
-    const totalUsuarios = listaUsuarios;
+    let totalUsuarios = listaUsuarios;
     
     if (nome) {
       totalUsuarios = totalUsuarios.filter((u) => u.nome === nome);
@@ -34,6 +34,7 @@ module.exports = {
     return totalUsuarios;
   },
   
+    buscarUsuarioPorEmail: (email) => listaUsuarios.find((u) => u.email === email),
     buscarUsuarioPorId: (id) => listaUsuarios.find((u) => u.id === id),
     criarUsuario: ({ nome, email, senha }) => {
     const novoUsuario = {

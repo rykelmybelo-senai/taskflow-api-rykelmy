@@ -52,7 +52,7 @@ const projetosController = {
             return res.status(404).json({ message: "Projeto não encontrado" });
         }
         const removido = listaProjetos.deletarProjeto(id);
-        res.json({ message: "Projeto removido", projeto: removido });
+        res.json(removido);
     },
 };
 

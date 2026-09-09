@@ -44,14 +44,13 @@ const usuariosController = {
 
   atualizarUsuario: (req, res) => {
     const id = parseInt(req.params.id);
-    const { nome, email, senha } = req.body;
 
     // Se não encontrou — retornar 404
     if (usuariosModel.buscarUsuarioPorId(id) === undefined) {
       return res.status(404).json({ erro: "Usuario não encontrado" });
     }
     // Retornar o usuario atualizado com status 200
-    res.json({ mensagem: "Usuario atualizado com sucesso", usuario: usuariosModel.atualizarUsuario(id, { nome, email, senha }) });
+    res.json({ mensagem: "Usuario atualizado com sucesso", usuario: usuariosModel.atualizarUsuario(id, req.body ) });
   },
 
   deletarUsuario: (req, res) => {
@@ -62,7 +61,7 @@ const usuariosController = {
     }
 
     // Retornar confirmação da remoção
-    res.json({ mensagem: "Usuario removido com sucesso", usuario: usuariosModel.deletarUsuario(id) });
+    res.json({ mensagem: "Usuario removido com sucesso" });
   },
 };
 
