@@ -56,8 +56,8 @@ module.exports = {
 
     deletarUsuario: (id) => {
     const usuarioIndex = listaUsuarios.findIndex((u) => u.id === id);
-    if (usuarioIndex === -1) return null;
+    if (usuarioIndex === -1) return false;
     const removido = listaUsuarios.splice(usuarioIndex, 1)[0];
-    return ({mensagem: "Usuario removido com sucesso.", usuario: removido});
+    return (removido);
   },
 };

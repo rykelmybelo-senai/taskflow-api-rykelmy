@@ -13,7 +13,11 @@ const usuariosController = {
       return res.status(404).json({ message: "Email não encontrado." });
     }
     if (!nome && !email && resultadoUser.length === 0) {
-      return res.status(400).json({ message: "Filtro inválido, busque por um nome ou email válido." });
+      return res
+        .status(400)
+        .json({
+          message: "Filtro inválido, busque por um nome ou email válido.",
+        });
     }
 
     res.json(resultadoUser);
@@ -39,7 +43,12 @@ const usuariosController = {
       return res
         .status(400)
         .json({ erro: "Email já cadastrado, informe outro email!" });
-    res.status(201).json({ mensagem: "Usuário criado com sucesso!", usuario: usuariosModel.criarUsuario({ nome, email, senha }) });
+    res
+      .status(201)
+      .json({
+        mensagem: "Usuário criado com sucesso!",
+        usuario: usuariosModel.criarUsuario({ nome, email, senha }),
+      });
   },
 
   atualizarUsuario: (req, res) => {
@@ -50,18 +59,20 @@ const usuariosController = {
       return res.status(404).json({ erro: "Usuario não encontrado" });
     }
     // Retornar o usuario atualizado com status 200
-    res.json({ mensagem: "Usuario atualizado com sucesso", usuario: usuariosModel.atualizarUsuario(id, req.body ) });
+    res.json({
+      mensagem: "Usuario atualizado com sucesso",
+      usuario: usuariosModel.atualizarUsuario(id, req.body),
+    });
   },
 
   deletarUsuario: (req, res) => {
-    const id = parseInt(req.params.id);
+    const usuarioRemovido = usuariosModel.deletarUsuario(
+      parseInt(req.params.id),
+    );
 
-    if (usuariosModel.buscarUsuarioPorId(id) === undefined) {
+    if (!usuarioRemovido)
       return res.status(404).json({ erro: "Usuario não encontrado" });
-    }
-
-    // Retornar confirmação da remoção
-    res.json({ mensagem: "Usuario removido com sucesso" });
+    res.json({ mensagem: "Usuario removido", usuario: usuarioRemovido });
   },
 };
 
