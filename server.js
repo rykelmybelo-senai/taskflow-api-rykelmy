@@ -6,6 +6,7 @@ const authRoutes = require("./src/routes/auth.routes");
 const tarefasRoutes = require("./src/routes/tarefas.routes");
 const usuariosRoutes = require("./src/routes/usuarios.routes");
 const projetosRoutes = require("./src/routes/projetos.routes");
+const autenticar = require("./src/middlewares/autenticar");
 
 const logger = require("./src/middlewares/logger");
 const validarContentType = require("./src/middlewares/validarContentType");
@@ -28,9 +29,9 @@ app.use(validarContentType);
 app.use(temporizador);
 app.use(logger); //middleware, vem antes das rotas.
 
-app.use("/tarefas", tarefasRoutes);
-app.use("/usuarios", usuariosRoutes);
-app.use("/projetos", projetosRoutes);
+app.use("/tarefas", autenticar, tarefasRoutes);
+app.use("/usuarios", autenticar, usuariosRoutes);
+app.use("/projetos", autenticar, projetosRoutes);
 app.use("/auth", authRoutes);
 
 app.use((req, res) => {

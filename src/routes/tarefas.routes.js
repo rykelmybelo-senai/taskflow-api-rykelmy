@@ -6,6 +6,7 @@ const tarefasController = require("../controllers/tarefas.controller");
 
 const validar = require('../middlewares/validar');
 const schemas = require('../middlewares/schemas');
+const autenticar = require("../middlewares/autenticar");
 
 router.get("/estatisticas", tarefasController.estatisticasTarefas);
 
@@ -14,9 +15,9 @@ router.get("/prioridade/:prioridade", tarefasController.listarPorPrioridade);
 router.get("/cidade/:cidade", tarefasController.listarPorCidade);
 
 router.get("/", tarefasController.listarTarefas);
-router.post("/", validar (schemas.tarefa), tarefasController.criarTarefa);
+router.post("/", autenticar, validar (schemas.tarefa), tarefasController.criarTarefa);
 router.get("/:id", tarefasController.buscarPorId);
-router.put("/:id", validar (schemas.tarefa), tarefasController.atualizarTarefa);
-router.delete("/:id", tarefasController.deletarTarefa);
+router.put("/:id", autenticar, validar (schemas.tarefa), tarefasController.atualizarTarefa);
+router.delete("/:id", autenticar, tarefasController.deletarTarefa);
 
 module.exports = router;
