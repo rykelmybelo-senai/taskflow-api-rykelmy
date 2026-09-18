@@ -17,9 +17,15 @@ let listaUsuarios = [
     email: "cleideuserteste@email.com",
     senha: "@Teste@321",
   },
+  {
+    id: 4,
+    nome: "Admin",
+    email: "admin@email.com",
+    senha: "1234",
+  },
 ];
 
-let proximoId = 4;
+let proximoId = 5;
 
 module.exports = {
   listarUsuarios: (nome, email) => {
