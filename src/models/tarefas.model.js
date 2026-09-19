@@ -17,7 +17,7 @@ let listaTarefas = [
     id: 3,
     texto: "Testar Postman",
     prioridade: "baixa",
-    coluna: "concluida",
+    coluna: "concluido",
     cidade: "Natal-RN",
   },
 ];

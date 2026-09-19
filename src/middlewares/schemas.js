@@ -9,7 +9,7 @@ const schemas = {
     coluna: {
       obrigatorio: true,
       tipo: "string",
-      enum: ["afazer", "andamento", "concluida"],
+      enum: ["afazer", "andamento", "concluido"],
     },
     //Implementar isso no Tarefas
     // usuarioId: { obrigatorio: false, tipo: "number" },

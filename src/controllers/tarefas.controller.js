@@ -10,7 +10,7 @@ const tarefasController = {
     const { coluna } = req.params;
     const tarefas = tarefasModel.listarPorColuna(coluna);
 
-    if (!coluna || !["afazer", "andamento", "concluida"].includes(coluna)) {
+    if (!coluna || !["afazer", "andamento", "concluido"].includes(coluna)) {
       return res.status(400).json({ message: "Coluna inválida. Use 'afazer', 'andamento' ou 'concluida'." });
     }
     res.json(tarefas);
