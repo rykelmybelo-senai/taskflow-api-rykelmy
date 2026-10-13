@@ -13,8 +13,18 @@ const validarContentType = require("./src/middlewares/validarContentType");
 const temporizador = require("./src/middlewares/temporizador");
 const cors = require("cors");
 
+const pool = require("./src/database/db");
+
 const app = express();
 const PORTA = process.env.PORTA || 3000;
+
+pool.query("SELECT NOW()", (err, res) => {
+  if (err) {
+    console.error("Erro ao conectar ao banco de dados:", err.message);
+  } else {
+    console.log("Banco conectado: ", res.rows[0].now);
+  }
+});
 
 //Processa a requisição antes de chegar na rota.
 app.use(cors({

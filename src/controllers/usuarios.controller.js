@@ -1,10 +1,10 @@
 const usuariosModel = require("../models/usuarios.model");
 
 const usuariosController = {
-  listarUsuarios: (req, res) => {
+  async listarUsuarios (req, res) {
     const { nome, email } = req.query;
     // Começar com todas os usuarios
-    let resultadoUser = usuariosModel.listarUsuarios(nome, email);
+    let resultadoUser = await usuariosModel.listarUsuarios(nome, email);
 
     if (resultadoUser.length === 0 && nome) {
       return res.status(404).json({ message: "Nome não encontrado." });
@@ -23,23 +23,23 @@ const usuariosController = {
     res.json(resultadoUser);
   },
 
-  buscarUsuarioPorId: (req, res) => {
+  async buscarUsuarioPorId (req, res) {
     const id = parseInt(req.params.id);
-    const usuario = usuariosModel.buscarUsuarioPorId(id);
+    const usuario = await usuariosModel.buscarUsuarioPorId(id);
     if (!usuario) {
       return res.status(404).json({ erro: "Usuário não encontrado!" });
     }
     res.json(usuario);
   },
 
-  criarUsuario: (req, res) => {
+  async criarUsuario (req, res) {
     const { nome, email, senha } = req.body;
     if (!nome || !email || !senha)
       return res
         .status(400)
         .json({ erro: "Nome, email e senha são obrigatórios!" });
 
-    if (usuariosModel.buscarUsuarioPorEmail(email))
+    if (await usuariosModel.buscarUsuarioPorEmail(email))
       return res
         .status(400)
         .json({ erro: "Email já cadastrado, informe outro email!" });
@@ -47,26 +47,26 @@ const usuariosController = {
       .status(201)
       .json({
         mensagem: "Usuário criado com sucesso!",
-        usuario: usuariosModel.criarUsuario({ nome, email, senha }),
+        usuario: await usuariosModel.criarUsuario({ nome, email, senha }),
       });
   },
 
-  atualizarUsuario: (req, res) => {
+  async atualizarUsuario (req, res) {
     const id = parseInt(req.params.id);
 
     // Se não encontrou — retornar 404
-    if (usuariosModel.buscarUsuarioPorId(id) === undefined) {
+    if (await usuariosModel.buscarUsuarioPorId(id) === undefined) {
       return res.status(404).json({ erro: "Usuario não encontrado" });
     }
     // Retornar o usuario atualizado com status 200
     res.json({
       mensagem: "Usuario atualizado com sucesso",
-      usuario: usuariosModel.atualizarUsuario(id, req.body),
+      usuario: await usuariosModel.atualizarUsuario(id, req.body),
     });
   },
 
-  deletarUsuario: (req, res) => {
-    const usuarioRemovido = usuariosModel.deletarUsuario(
+  async deletarUsuario (req, res) {
+    const usuarioRemovido = await usuariosModel.deletarUsuario(
       parseInt(req.params.id),
     );
 

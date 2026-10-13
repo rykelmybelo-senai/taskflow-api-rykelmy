@@ -1,14 +1,15 @@
 const tarefasModel = require("../models/tarefas.model");
 
 const tarefasController = {
-  listarTarefas (req, res) {
-    let resultado = tarefasModel.listarTarefas();
+  async listarTarefas (req, res) {
+    let resultado = await tarefasModel.listarTarefas();
     res.json(resultado);
+    console.log("Resultado de listarTarefas:", resultado);
   },
 
-  listarPorColuna: (req, res) => {
+  async listarPorColuna (req, res) {
     const { coluna } = req.params;
-    const tarefas = tarefasModel.listarPorColuna(coluna);
+    const tarefas = await tarefasModel.listarPorColuna(coluna);
 
     if (!coluna || !["afazer", "andamento", "concluido"].includes(coluna)) {
       return res.status(400).json({ message: "Coluna inválida. Use 'afazer', 'andamento' ou 'concluida'." });
@@ -16,9 +17,9 @@ const tarefasController = {
     res.json(tarefas);
   },
 
-  listarPorPrioridade: (req, res) => {
+  async listarPorPrioridade (req, res) {
     const { prioridade } = req.params;
-    const tarefas = tarefasModel.listarPorPrioridade(prioridade);
+    const tarefas = await tarefasModel.listarPorPrioridade(prioridade);
 
     if (!prioridade || !["alta", "media", "baixa"].includes(prioridade)) {
       return res.status(400).json({ message: "Prioridade inválida. Use 'alta', 'media' ou 'baixa'." });
@@ -26,44 +27,45 @@ const tarefasController = {
     res.json(tarefas);
   },
 
-  listarPorCidade: (req, res) => {
+  async listarPorCidade (req, res) {
     const { cidade } = req.params;
-    const tarefas = tarefasModel.listarPorCidade(cidade);
+    const tarefas = await tarefasModel.listarPorCidade(cidade);
 
     if (!tarefas) return res.status(400).json([]);
     res.json(tarefas);
   },
 
-  buscarPorId: (req, res) => {
-    const tarefa = tarefasModel.buscarPorId(parseInt(req.params.id));
+  async buscarPorId (req, res) {
+    const tarefa = await tarefasModel.buscarPorId(parseInt(req.params.id));
 
     if (!tarefa) return res.status(404).json({ erro: "Tarefa não encontrada" });
     res.json(tarefa);
   },
 
-  criarTarefa: (req, res) => {
+  async criarTarefa (req, res) {
     const { texto } = req.body;
 
     if (!texto) return res.status(400).json({ erro: "Texto obrigatório" });
-    res.status(201).json(tarefasModel.criarTarefa(req.body));
+    const novaTarefa = await tarefasModel.criarTarefa(req.body);
+    res.status(201).json(novaTarefa);
   },
 
-  atualizarTarefa: (req, res) => {
-    const atualizada = tarefasModel.atualizarTarefa(parseInt(req.params.id), req.body);
+  async atualizarTarefa (req, res) {
+    const atualizada = await tarefasModel.atualizarTarefa(parseInt(req.params.id), req.body);
 
     if (!atualizada) return res.status(404).json({ erro: "Tarefa não encontrada" });
     res.json(atualizada);
   },
 
-  deletarTarefa: (req, res) => {
-    const removida = tarefasModel.deletarTarefa(parseInt(req.params.id));
+  async deletarTarefa (req, res)  {
+    const removida = await tarefasModel.deletarTarefa(parseInt(req.params.id));
 
     if (!removida) return res.status(404).json({ erro: "Tarefa não encontrada" });
     res.json({ mensagem: "Tarefa removida", tarefa: removida });
   },
 
-  estatisticasTarefas: (req, res) => {
-    const estatisticas = tarefasModel.estatisticasTarefas();
+  async estatisticasTarefas (req, res) {
+    const estatisticas = await tarefasModel.estatisticasTarefas();
     res.json(estatisticas);
   }
 };
