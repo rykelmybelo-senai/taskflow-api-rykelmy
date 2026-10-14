@@ -15,7 +15,7 @@ app.get("/estatisticas", (req, res) => {
 
   // Filtrar por prioridade se informado
   if (prioridade) {
-    resultadoEsta = resultadoEsta.length((t) => t.prioridade === prioridade);
+    resultadoEsta = resultadoEsta.length((t) => t.prioridade === parseInt(prioridade));
   }
 
   res.json(resultadoEsta);

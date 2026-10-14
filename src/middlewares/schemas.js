@@ -1,18 +1,20 @@
 const schemas = {
   tarefa: {
     texto: { obrigatorio: true, tipo: "string" },
-    prioridade: {
-      obrigatorio: false,
-      tipo: "string",
-      enum: ["alta", "media", "baixa"],
-    },
     coluna: {
       obrigatorio: true,
       tipo: "string",
       enum: ["afazer", "andamento", "concluido"],
     },
     //Implementar isso no Tarefas
-    // usuarioId: { obrigatorio: false, tipo: "number" },
+    // ordem: { obrigatorio: false, tipo: "number" },
+    projeto_id: { obrigatorio: true, tipo: "number" },
+    usuario_id: { obrigatorio: true, tipo: "number" },
+    // criado_em: { obrigatorio: false, tipo: "string", formato: "data" },
+    cidade: { obrigatorio: false, tipo: "string" },
+    prioridade_id: { obrigatorio: true, tipo: "number" },
+    // iniciado_em: { obrigatorio: false, tipo: "string", formato: "data" },
+    // concluido_em: { obrigatorio: false, tipo: "string", formato: "data" },
   },
 
   usuario: {

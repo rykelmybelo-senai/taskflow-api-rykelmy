@@ -7,70 +7,71 @@ module.exports = {
   },
   listarPorColuna: async (coluna) => {
     const resultado = await pool.query(
-      "SELECT * FROM tarefas WHERE coluna = $1",
+      "SELECT * FROM tarefas t WHERE t.coluna = $1",
       [coluna],
     );
     return resultado.rows;
   },
   listarPorPrioridade: async (prioridade) => {
     const resultado = await pool.query(
-      "SELECT * FROM tarefas WHERE prioridade = $1",
+      "SELECT * FROM tarefas t WHERE t.idprioridade = $1",
       [prioridade],
     );
     return resultado.rows;
   },
   listarPorCidade: async (cidade) => {
     const resultado = await pool.query(
-      "SELECT * FROM tarefas WHERE cidade = $1",
+      "SELECT * FROM tarefas t WHERE t.cidade = $1",
       [cidade],
     );
     return resultado.rows;
   },
   buscarPorId: async (id) => {
-    const resultado = await pool.query("SELECT * FROM tarefas WHERE id = $1", [
+    const resultado = await pool.query("SELECT * FROM tarefas t WHERE t.id = $1", [
       id,
     ]);
-    return resultado.rows[0] || null;
+    return resultado.rows[0];
   },
   criarTarefa: async ({
     texto,
-    prioridade,
+    prioridade_id,
     coluna,
     usuario_id,
     projeto_id,
     cidade,
+    ordem,
   }) => {
     const resultado = await pool.query(
-      "INSERT INTO tarefas (texto, prioridade, coluna, usuario_id, projeto_id, cidade) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [texto, prioridade || "media", coluna || "afazer", usuario_id || null, projeto_id || null, cidade || null],
+      "INSERT INTO tarefas (texto, prioridade_id, coluna, usuario_id, projeto_id, cidade, ordem) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [texto, prioridade_id || 2, coluna || "afazer", usuario_id, projeto_id, cidade || null, ordem || 0],
     );
-    return resultado.rows[0] || null;
+    return resultado.rows[0];
   },
   atualizarTarefa: async (id, dadosAtualizados) => {
-    const { texto, prioridade, coluna, usuario_id, projeto_id, cidade } =
+    const { texto, prioridade_id, coluna, usuario_id, projeto_id, cidade } =
       dadosAtualizados;
     const resultado = await pool.query(
-      "UPDATE tarefas SET texto = $1, prioridade = $2, coluna = $3, usuario_id = $4, projeto_id = $5, cidade = $6 WHERE id = $7 RETURNING *",
-      [texto, prioridade || "media", coluna || "afazer", usuario_id || null, projeto_id || null, cidade, id],
+      "UPDATE tarefas SET texto = $1, prioridade_id = $2, coluna = $3, usuario_id = $4, projeto_id = $5, cidade = $6 WHERE id = $7 RETURNING *",
+      [texto, prioridade_id || 2, coluna || "afazer", usuario_id || null, projeto_id || null, cidade, id],
     );
-    return resultado.rows[0] || null;
+    return resultado.rows[0];
   },
   deletarTarefa: async (id) => {
     const resultado = await pool.query(
       "DELETE FROM tarefas WHERE id = $1 RETURNING *",
       [id],
     );
-    return resultado.rows[0] || null;
+    return resultado.rows[0];
   },
   estatisticasTarefas: async () => {
     const totalTarefasResult = await pool.query("SELECT COUNT(*) FROM tarefas");
     const totalTarefas = parseInt(totalTarefasResult.rows[0].count, 10);
     const totalPorPrioridadeResult = await pool.query(
-      "SELECT prioridade, COUNT(*) as count FROM tarefas GROUP BY prioridade",
+      "SELECT t.prioridade_id, COUNT(*) as count FROM tarefas t group by t.prioridade_id order by t.prioridade_id",
     );
     const totalPorPrioridade = totalPorPrioridadeResult.rows.reduce(
       (acc, row) => {
-        acc[row.prioridade] = parseInt(row.count, 10);
+        acc[row.prioridade_id] = parseInt(row.count, 10);
         return acc;
       },
       {},

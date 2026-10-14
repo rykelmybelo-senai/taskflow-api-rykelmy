@@ -18,11 +18,11 @@ const tarefasController = {
   },
 
   async listarPorPrioridade (req, res) {
-    const { prioridade } = req.params;
-    const tarefas = await tarefasModel.listarPorPrioridade(prioridade);
+    const { prioridade_id } = req.params;
+    const tarefas = await tarefasModel.listarPorPrioridade(prioridade_id);
 
-    if (!prioridade || !["alta", "media", "baixa"].includes(prioridade)) {
-      return res.status(400).json({ message: "Prioridade inválida. Use 'alta', 'media' ou 'baixa'." });
+    if (!prioridade_id.includes(prioridade_id)) {
+      return res.status(400).json({ message: "Prioridade inválida. Use '1', '2' ou '3'." });
     }
     res.json(tarefas);
   },
@@ -43,11 +43,21 @@ const tarefasController = {
   },
 
   async criarTarefa (req, res) {
-    const { texto } = req.body;
+    const { texto, prioridade_id, coluna, usuario_id, projeto_id, cidade } = req.body;
 
-    if (!texto) return res.status(400).json({ erro: "Texto obrigatório" });
-    const novaTarefa = await tarefasModel.criarTarefa(req.body);
-    res.status(201).json(novaTarefa);
+    // if (!texto) return res.status(400).json({ erro: "Texto obrigatório" });
+    // if (!coluna.includes(coluna)) {
+    //   return res.status(400).json({ erro: "Coluna inválida. Use 'afazer', 'andamento' ou 'concluido'." });
+    // };
+    // if (usuario_id) {
+    //   if (!projeto_id) {
+    //     return res.status(400).json({ erro: "Projeto obrigatório quando usuário está definido" });
+    //   }
+    // }
+    if (coluna === "andamento" && await tarefasModel.listarPorColuna("andamento").length > 0) {
+      return res.status(400).json({ erro: "Não é permitido criar tarefas diretamente na coluna 'andamento'" });
+    }
+    res.status(201).json(await tarefasModel.criarTarefa(req.body));
   },
 
   async atualizarTarefa (req, res) {
