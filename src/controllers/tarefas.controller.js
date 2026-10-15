@@ -1,33 +1,40 @@
 const tarefasModel = require("../models/tarefas.model");
+const criarErro = require("../utils/criarErro");
 
 const tarefasController = {
-  async listarTarefas (req, res) {
+  async listarTarefas(req, res) {
     let resultado = await tarefasModel.listarTarefas();
     res.json(resultado);
     console.log("Resultado de listarTarefas:", resultado);
   },
 
-  async listarPorColuna (req, res) {
+  async listarPorColuna(req, res) {
     const { coluna } = req.params;
     const tarefas = await tarefasModel.listarPorColuna(coluna);
 
     if (!coluna || !["afazer", "andamento", "concluido"].includes(coluna)) {
-      return res.status(400).json({ message: "Coluna inválida. Use 'afazer', 'andamento' ou 'concluida'." });
+      return res
+        .status(400)
+        .json({
+          message: "Coluna inválida. Use 'afazer', 'andamento' ou 'concluida'.",
+        });
     }
     res.json(tarefas);
   },
 
-  async listarPorPrioridade (req, res) {
+  async listarPorPrioridade(req, res) {
     const { prioridade_id } = req.params;
     const tarefas = await tarefasModel.listarPorPrioridade(prioridade_id);
 
     if (!prioridade_id.includes(prioridade_id)) {
-      return res.status(400).json({ message: "Prioridade inválida. Use '1', '2' ou '3'." });
+      return res
+        .status(400)
+        .json({ message: "Prioridade inválida. Use '1', '2' ou '3'." });
     }
     res.json(tarefas);
   },
 
-  async listarPorCidade (req, res) {
+  async listarPorCidade(req, res) {
     const { cidade } = req.params;
     const tarefas = await tarefasModel.listarPorCidade(cidade);
 
@@ -35,15 +42,18 @@ const tarefasController = {
     res.json(tarefas);
   },
 
-  async buscarPorId (req, res) {
+  async buscarPorId(req, res) {
     const tarefa = await tarefasModel.buscarPorId(parseInt(req.params.id));
 
-    if (!tarefa) return res.status(404).json({ erro: "Tarefa não encontrada" });
+    if (!tarefa) {
+      throw criarErro(404, "Tarefa não encontrada");
+    }
     res.json(tarefa);
   },
 
-  async criarTarefa (req, res) {
-    const { texto, prioridade_id, coluna, usuario_id, projeto_id, cidade } = req.body;
+  async criarTarefa(req, res) {
+    const { texto, prioridade_id, coluna, usuario_id, projeto_id, cidade } =
+      req.body;
 
     // if (!texto) return res.status(400).json({ erro: "Texto obrigatório" });
     // if (!coluna.includes(coluna)) {
@@ -54,30 +64,42 @@ const tarefasController = {
     //     return res.status(400).json({ erro: "Projeto obrigatório quando usuário está definido" });
     //   }
     // }
-    if (coluna === "andamento" && await tarefasModel.listarPorColuna("andamento").length > 0) {
-      return res.status(400).json({ erro: "Não é permitido criar tarefas diretamente na coluna 'andamento'" });
+    if (
+      coluna === "andamento" &&
+      (await tarefasModel.listarPorColuna("andamento").length) > 0
+    ) {
+      return res
+        .status(400)
+        .json({
+          erro: "Não é permitido criar tarefas diretamente na coluna 'andamento'",
+        });
     }
     res.status(201).json(await tarefasModel.criarTarefa(req.body));
   },
 
-  async atualizarTarefa (req, res) {
-    const atualizada = await tarefasModel.atualizarTarefa(parseInt(req.params.id), req.body);
+  async atualizarTarefa(req, res) {
+    const atualizada = await tarefasModel.atualizarTarefa(
+      parseInt(req.params.id),
+      req.body,
+    );
 
-    if (!atualizada) return res.status(404).json({ erro: "Tarefa não encontrada" });
+    if (!atualizada)
+      return res.status(404).json({ erro: "Tarefa não encontrada" });
     res.json(atualizada);
   },
 
-  async deletarTarefa (req, res)  {
+  async deletarTarefa(req, res) {
     const removida = await tarefasModel.deletarTarefa(parseInt(req.params.id));
 
-    if (!removida) return res.status(404).json({ erro: "Tarefa não encontrada" });
+    if (!removida)
+      return res.status(404).json({ erro: "Tarefa não encontrada" });
     res.json({ mensagem: "Tarefa removida", tarefa: removida });
   },
 
-  async estatisticasTarefas (req, res) {
+  async estatisticasTarefas(req, res) {
     const estatisticas = await tarefasModel.estatisticasTarefas();
     res.json(estatisticas);
-  }
+  },
 };
 
 module.exports = tarefasController;

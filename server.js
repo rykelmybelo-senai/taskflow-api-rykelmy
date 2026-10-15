@@ -1,5 +1,5 @@
 console.log("TaskFlow API — pronto para o Express!!!");
-require ('dotenv').config();
+require("dotenv").config();
 
 const express = require("express");
 const authRoutes = require("./src/routes/auth.routes");
@@ -7,6 +7,7 @@ const tarefasRoutes = require("./src/routes/tarefas.routes");
 const usuariosRoutes = require("./src/routes/usuarios.routes");
 const projetosRoutes = require("./src/routes/projetos.routes");
 const autenticar = require("./src/middlewares/autenticar");
+const tratarErros = require("./src/middlewares/erro.middleware");
 
 const logger = require("./src/middlewares/logger");
 const validarContentType = require("./src/middlewares/validarContentType");
@@ -27,12 +28,14 @@ pool.query("SELECT NOW()", (err, res) => {
 });
 
 //Processa a requisição antes de chegar na rota.
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 86400,
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 86400,
+  }),
+);
 
 app.use(express.json());
 app.use(validarContentType);
@@ -51,6 +54,8 @@ app.use((req, res) => {
     caminho: req.url,
   });
 });
+
+app.use(tratarErros);
 
 app.listen(PORTA, () => console.log(`Porta ${PORTA}`));
 
