@@ -48,11 +48,8 @@ app.use("/projetos", autenticar, projetosRoutes);
 app.use("/auth", authRoutes);
 
 app.use((req, res) => {
-  res.status(404).json({
-    erro: "Rota não encontrada",
-    metodo: req.method,
-    caminho: req.url,
-  });
+  const rota = `${req.method} ${req.url}`;
+  throw criarErro(404, `Rota ${rota} não encontrada`);
 });
 
 app.use(tratarErros);

@@ -1,15 +1,27 @@
-function validar(schema) {
+const criarErro = require("../utils/criarErro.js");
+
+function validar(schema, origem) {
   return function (req, res, next) {
+    const dados = req[origem || "body"] || {};
     const erros = []; // lista de erros encontrados
 
     for (const campo in schema) {
       const regras = schema[campo];
-      const valor = req.body[campo];
+      const valor = dados[campo];
       const ausente = valor === undefined || valor === null || valor === "";
 
       if (regras.obrigatorio && ausente) {
         erros.push(`O campo '${campo}' é obrigatório`);
         continue;
+      }
+
+      if (regras.tipo === "integer") {
+        const numero = typeof valor === "string" ? Number(valor) : valor;
+        if (!Number.isInteger(numero) || numero <= 0) {
+          erros.push(`O campo '${campo}' deve ser um número inteiro positivo`);
+        }
+      } else if (regras.tipo && typeof valor !== regras.tipo) {
+        erros.push(`O campo '${campo}' deve ser do tipo ${regras.tipo}`);
       }
 
       if (!ausente && regras.tipo && typeof valor !== regras.tipo) {
@@ -43,7 +55,7 @@ function validar(schema) {
     }
 
     if (erros.length > 0) {
-      return res.status(400).json({ erros });
+      throw criarErro(400, "Dados inválidos", erros);
     }
 
     next();
