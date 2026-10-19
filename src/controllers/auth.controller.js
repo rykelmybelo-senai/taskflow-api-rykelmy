@@ -1,22 +1,23 @@
 const jwt = require("jsonwebtoken");
 const usuarioModel = require("../models/usuarios.model");
+const criarErro = require("../utils/criarErro.js");
 
 const authController = {
   async login(req, res) {
     const { email, senha } = req.body;
 
     if (!email || !senha)
-      return res.status(400).json({ erro: "Email e senha são obrigatórios" });
+      throw criarErro(400, "Email e senha são obrigatórios");
 
     const usuario = await usuarioModel.buscarUsuarioPorEmail(email);
 
     if (!usuario)
-      return res.status(401).json({ erro: "Credenciais inválidas" });
+      throw criarErro(401, "Credenciais inválidas");
 
     // console.log("Usuario encontrado:", usuario);
     // console.log("Senha fornecida:", senha);
     if (usuario.senha_hash !== senha)
-      return res.status(401).json({ erro: "Credenciais inválidas" });
+      throw criarErro(401, "Credenciais inválidas");
 
     const token = jwt.sign(
       { id: usuario.id, nome: usuario.nome },

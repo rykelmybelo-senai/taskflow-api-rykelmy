@@ -1,4 +1,6 @@
 const usuariosModel = require("../models/usuarios.model");
+const criarErro = require("../utils/criarErro");
+
 
 const usuariosController = {
   async listarUsuarios (req, res) {
@@ -7,17 +9,13 @@ const usuariosController = {
     let resultadoUser = await usuariosModel.listarUsuarios(nome, email);
 
     if (resultadoUser.length === 0 && nome) {
-      return res.status(404).json({ message: "Nome não encontrado." });
+      throw criarErro(404, "Nome não encontrado.");
     }
     if (resultadoUser.length === 0 && email) {
-      return res.status(404).json({ message: "Email não encontrado." });
+      throw criarErro(404, "Email não encontrado.");
     }
     if (!nome && !email && resultadoUser.length === 0) {
-      return res
-        .status(400)
-        .json({
-          message: "Filtro inválido, busque por um nome ou email válido.",
-        });
+      throw criarErro(400, "Filtro inválido, busque por um nome ou email válido.");
     }
 
     res.json(resultadoUser);
@@ -27,7 +25,7 @@ const usuariosController = {
     const id = parseInt(req.params.id);
     const usuario = await usuariosModel.buscarUsuarioPorId(id);
     if (!usuario) {
-      return res.status(404).json({ erro: "Usuário não encontrado!" });
+      throw criarErro(404, "Usuário não encontrado!");
     }
     res.json(usuario);
   },
@@ -35,14 +33,10 @@ const usuariosController = {
   async criarUsuario (req, res) {
     const { nome, email, senha } = req.body;
     if (!nome || !email || !senha)
-      return res
-        .status(400)
-        .json({ erro: "Nome, email e senha são obrigatórios!" });
+      throw criarErro(400, "Nome, email e senha são obrigatórios!");
 
     if (await usuariosModel.buscarUsuarioPorEmail(email))
-      return res
-        .status(400)
-        .json({ erro: "Email já cadastrado, informe outro email!" });
+      throw criarErro(400, "Email já cadastrado, informe outro email!");
     res
       .status(201)
       .json({
@@ -56,11 +50,11 @@ const usuariosController = {
 
     // Se não encontrou — retornar 404
     if (await usuariosModel.buscarUsuarioPorId(id) === undefined) {
-      return res.status(404).json({ erro: "Usuario não encontrado" });
+      throw criarErro(404, "Usuário não encontrado");
     }
     // Retornar o usuario atualizado com status 200
     res.json({
-      mensagem: "Usuario atualizado com sucesso",
+      mensagem: "Usuário atualizado com sucesso",
       usuario: await usuariosModel.atualizarUsuario(id, req.body),
     });
   },
@@ -71,8 +65,8 @@ const usuariosController = {
     );
 
     if (!usuarioRemovido)
-      return res.status(404).json({ erro: "Usuario não encontrado" });
-    res.json({ mensagem: "Usuario removido", usuario: usuarioRemovido });
+      throw criarErro(404, "Usuário não encontrado");
+    res.json({ mensagem: "Usuário removido", usuario: usuarioRemovido });
   },
 };
 
