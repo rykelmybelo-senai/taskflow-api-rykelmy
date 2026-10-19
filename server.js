@@ -8,6 +8,7 @@ const usuariosRoutes = require("./src/routes/usuarios.routes");
 const projetosRoutes = require("./src/routes/projetos.routes");
 const autenticar = require("./src/middlewares/autenticar");
 const tratarErros = require("./src/middlewares/erro.middleware");
+const criarErro = require('./src/utils/criarErro');
 
 const logger = require("./src/middlewares/logger");
 const validarContentType = require("./src/middlewares/validarContentType");

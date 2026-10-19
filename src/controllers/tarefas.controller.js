@@ -19,10 +19,10 @@ const tarefasController = {
   },
 
   async listarPorPrioridade(req, res) {
-    const { prioridade_id } = req.params;
-    const tarefas = await tarefasModel.listarPorPrioridade(prioridade_id);
+    const { prioridade } = req.params;
+    const tarefas = await tarefasModel.listarPorPrioridade(prioridade);
 
-    if (!prioridade_id.includes(prioridade_id)) {
+    if (!prioridade.includes(prioridade)) {
       throw criarErro(400, "Prioridade inválida. Use '1', '2' ou '3'.");
     }
     res.json(tarefas);

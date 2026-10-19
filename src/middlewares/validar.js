@@ -15,16 +15,16 @@ function validar(schema, origem) {
         continue;
       }
 
+      if (ausente) {
+        continue; // se o campo não é obrigatório e está ausente, não há erro
+      }
+
       if (regras.tipo === "integer") {
         const numero = typeof valor === "string" ? Number(valor) : valor;
         if (!Number.isInteger(numero) || numero <= 0) {
           erros.push(`O campo '${campo}' deve ser um número inteiro positivo`);
         }
       } else if (regras.tipo && typeof valor !== regras.tipo) {
-        erros.push(`O campo '${campo}' deve ser do tipo ${regras.tipo}`);
-      }
-
-      if (!ausente && regras.tipo && typeof valor !== regras.tipo) {
         erros.push(`O campo '${campo}' deve ser do tipo ${regras.tipo}`);
       }
 
