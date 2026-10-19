@@ -13,11 +13,7 @@ const tarefasController = {
     const tarefas = await tarefasModel.listarPorColuna(coluna);
 
     if (!coluna || !["afazer", "andamento", "concluido"].includes(coluna)) {
-      return res
-        .status(400)
-        .json({
-          message: "Coluna inválida. Use 'afazer', 'andamento' ou 'concluida'.",
-        });
+      throw criarErro(400, "Coluna inválida. Use 'afazer', 'andamento' ou 'concluida'.");
     }
     res.json(tarefas);
   },
@@ -27,9 +23,7 @@ const tarefasController = {
     const tarefas = await tarefasModel.listarPorPrioridade(prioridade_id);
 
     if (!prioridade_id.includes(prioridade_id)) {
-      return res
-        .status(400)
-        .json({ message: "Prioridade inválida. Use '1', '2' ou '3'." });
+      throw criarErro(400, "Prioridade inválida. Use '1', '2' ou '3'.");
     }
     res.json(tarefas);
   },
@@ -38,7 +32,7 @@ const tarefasController = {
     const { cidade } = req.params;
     const tarefas = await tarefasModel.listarPorCidade(cidade);
 
-    if (!tarefas) return res.status(400).json([]);
+    if (!tarefas) throw criarErro(400, "Nenhuma tarefa encontrada para a cidade especificada");
     res.json(tarefas);
   },
 
@@ -68,11 +62,7 @@ const tarefasController = {
       coluna === "andamento" &&
       (await tarefasModel.listarPorColuna("andamento").length) > 0
     ) {
-      return res
-        .status(400)
-        .json({
-          erro: "Não é permitido criar tarefas diretamente na coluna 'andamento'",
-        });
+      throw criarErro(400, "Não é permitido criar tarefas diretamente na coluna 'andamento'");
     }
     res.status(201).json(await tarefasModel.criarTarefa(req.body));
   },
@@ -84,7 +74,7 @@ const tarefasController = {
     );
 
     if (!atualizada)
-      return res.status(404).json({ erro: "Tarefa não encontrada" });
+      throw criarErro(404, "Tarefa não encontrada");
     res.json(atualizada);
   },
 
@@ -92,7 +82,7 @@ const tarefasController = {
     const removida = await tarefasModel.deletarTarefa(parseInt(req.params.id));
 
     if (!removida)
-      return res.status(404).json({ erro: "Tarefa não encontrada" });
+      throw criarErro(404, "Tarefa não encontrada");
     res.json({ mensagem: "Tarefa removida", tarefa: removida });
   },
 
