@@ -11,8 +11,6 @@ const autenticar = require("../middlewares/autenticar");
 router.get("/estatisticas", tarefasController.estatisticasTarefas);
 
 router.get("/coluna/:coluna", tarefasController.listarPorColuna);
-router.get("/prioridade/:prioridade", tarefasController.listarPorPrioridade);
-router.get("/cidade/:cidade", tarefasController.listarPorCidade);
 
 router.get("/", tarefasController.listarTarefas);
 router.post("/", autenticar, validar (schemas.tarefa), tarefasController.criarTarefa);

@@ -27,5 +27,10 @@ const schemas = {
     nome: { obrigatorio: true, tipo: "string" },
     descricao: { obrigatorio: false, tipo: "string", maxLength: 200 },
   },
+
+  prioridade: {
+    descricao: { obrigatorio: true, tipo: "string" },
+    ativo: { obrigatorio: false, tipo: "boolean" },
+  },
 };
 module.exports = schemas;

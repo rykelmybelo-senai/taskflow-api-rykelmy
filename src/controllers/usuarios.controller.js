@@ -49,7 +49,7 @@ const usuariosController = {
     const id = parseInt(req.params.id);
 
     // Se não encontrou — retornar 404
-    if (await usuariosModel.buscarUsuarioPorId(id) === undefined) {
+    if (!(await usuariosModel.buscarUsuarioPorId(id))) {
       throw criarErro(404, "Usuário não encontrado");
     }
     // Retornar o usuario atualizado com status 200

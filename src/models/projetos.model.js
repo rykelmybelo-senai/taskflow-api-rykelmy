@@ -6,46 +6,48 @@ module.exports = {
     const params = [];
 
     if (nome) {
-      query += " WHERE nome = ?";
       params.push(nome);
+      query += ` WHERE nome = $${params.length}`;
     }
     if (status) {
-      query += params.length ? " AND status = ?" : " WHERE status = ?";
       params.push(status);
+      query +=
+        params.length > 1
+          ? ` AND status = $${params.length}`
+          : ` WHERE status = $${params.length}`;
     }
 
-    const [projetos] = await pool.query(query, params);
-    return projetos;
+    const resultado = await pool.query(query, params);
+    return resultado.rows;
   },
   buscarProjetoPorId: async (id) => {
-    const [projeto] = await pool.query("SELECT * FROM projetos WHERE id = ?", [
+    const resultado = await pool.query("SELECT * FROM projetos WHERE id = $1", [
       id,
     ]);
-    return projeto[0];
+    return resultado.rows[0];
   },
   criarProjeto: async ({ nome, descricao, status }) => {
-    const [resultado] = await pool.query(
-      "INSERT INTO projetos (nome, descricao, status) VALUES (?, ?, ?)",
-      [nome, descricao, status],
+    const resultado = await pool.query(
+      "INSERT INTO projetos (nome, descricao, status) VALUES ($1, $2, $3) RETURNING *",
+      [nome, descricao, status || "ativo"],
     );
-    return resultado;
+    return resultado.rows[0];
   },
   atualizarProjeto: async (id, { nome, descricao, status }) => {
-    const [resultado] = await pool.query(
-      "UPDATE projetos SET nome = ?, descricao = ?, status = ? WHERE id = ?",
+    const resultado = await pool.query(
+      "UPDATE projetos SET nome = $1, descricao = $2, status = $3 WHERE id = $4 RETURNING *",
       [nome, descricao, status, id],
     );
-    return resultado;
+    return resultado.rows[0];
   },
   deletarProjeto: async (id) => {
-    const [resultado] = await pool.query("DELETE FROM projetos WHERE id = ?", [
-      id,
-    ]);
-    return resultado;
+    const resultado = await pool.query(
+      "DELETE FROM projetos WHERE id = $1 RETURNING *",
+      [id],
+    );
+    return resultado.rows[0];
   },
 };
-
-
 
 //Codigo antigo de teste com array de projetos, substituido por banco de dados Postgres.
 // let listaProjetos = [

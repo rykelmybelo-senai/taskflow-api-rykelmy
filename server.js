@@ -6,6 +6,7 @@ const authRoutes = require("./src/routes/auth.routes");
 const tarefasRoutes = require("./src/routes/tarefas.routes");
 const usuariosRoutes = require("./src/routes/usuarios.routes");
 const projetosRoutes = require("./src/routes/projetos.routes");
+const prioridadesRoutes = require("./src/routes/prioridades.routes");
 const autenticar = require("./src/middlewares/autenticar");
 const tratarErros = require("./src/middlewares/erro.middleware");
 const criarErro = require('./src/utils/criarErro');
@@ -47,6 +48,7 @@ app.use("/tarefas", autenticar, tarefasRoutes);
 app.use("/usuarios", autenticar, usuariosRoutes);
 app.use("/projetos", autenticar, projetosRoutes);
 app.use("/auth", authRoutes);
+app.use("/prioridades", autenticar,prioridadesRoutes);
 
 app.use((req, res) => {
   const rota = `${req.method} ${req.url}`;

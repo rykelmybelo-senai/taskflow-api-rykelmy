@@ -59,6 +59,10 @@ module.exports = {
       [id],
     );
 
+    if (tarefaAtual.rows.length === 0) {
+      return null;
+    };
+
     const concluidaEm =
       dadosAtualizados.coluna === "concluido" ? new Date() : null;
 

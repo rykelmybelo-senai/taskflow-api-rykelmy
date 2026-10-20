@@ -60,7 +60,7 @@ const tarefasController = {
     // }
     if (
       coluna === "andamento" &&
-      (await tarefasModel.listarPorColuna("andamento").length) > 0
+      (await tarefasModel.listarPorColuna("andamento")).length > 0
     ) {
       throw criarErro(400, "Não é permitido criar tarefas diretamente na coluna 'andamento'");
     }

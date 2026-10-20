@@ -52,7 +52,7 @@ const projetosController = {
     async deletarProjeto (req, res) {
         const id = parseInt(req.params.id);
 
-        if (!listaProjetos.buscarProjetoPorId(id)) {
+        if (!await listaProjetos.buscarProjetoPorId(id)) {
             throw criarErro(404, "Projeto não encontrado");
         }
         const removido = await listaProjetos.deletarProjeto(id);
