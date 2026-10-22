@@ -4,10 +4,10 @@ module.exports = {
   listarTarefas: async () => {
     //Use entre crase para organizar o código do banco na vertical.
     const resultado = await pool.query(
-      `SELECT t.*, p.nome as projeto, u.nome as usuario, pr.nome as prioridade FROM tarefas t 
+      `SELECT t.*, p.nome as projeto, u.nome as usuario, pr.descricao as prioridade FROM tarefas t 
       inner join projetos p on t.projeto_id = p.id 
       inner join usuarios u on t.usuario_id = u.id 
-      inner join prioridades pr on t.prioridade_id = pr.id
+      inner join prioridade pr on t.prioridade_id = pr.id
       ORDER BY t.id`,
     ); //Esse terceiro inner join terá que ser implementado no Front End para evitar de chamar uma função no "ListaTarefas".
     return resultado.rows;
