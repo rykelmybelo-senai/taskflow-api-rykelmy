@@ -21,6 +21,9 @@ const pool = require("./src/database/db");
 const app = express();
 const PORTA = process.env.PORTA || 3000;
 
+const swaggerUi = require('swagger-ui-express');
+const openapi = require('./src/docs/openapi');
+
 pool.query("SELECT NOW()", (err, res) => {
   if (err) {
     console.error("Erro ao conectar ao banco de dados:", err.message);
@@ -49,6 +52,8 @@ app.use("/usuarios", autenticar, usuariosRoutes);
 app.use("/projetos", autenticar, projetosRoutes);
 app.use("/auth", authRoutes);
 app.use("/prioridades", autenticar,prioridadesRoutes);
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapi));
 
 app.use((req, res) => {
   const rota = `${req.method} ${req.url}`;

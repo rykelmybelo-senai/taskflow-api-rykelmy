@@ -12,7 +12,7 @@ const schemas = {
     projeto_id: { obrigatorio: true, tipo: "integer" },
     usuario_id: { obrigatorio: true, tipo: "integer" },
     // criado_em: { obrigatorio: false, tipo: "string", formato: "data" },
-    cidade: { obrigatorio: false, tipo: "string" },
+    // cidade: { obrigatorio: false, tipo: "string" },
     prioridade_id: { obrigatorio: true, tipo: "integer" },
     // iniciado_em: { obrigatorio: false, tipo: "string", formato: "data" },
     // concluido_em: { obrigatorio: false, tipo: "string", formato: "data" },
