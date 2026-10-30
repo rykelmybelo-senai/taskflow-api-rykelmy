@@ -1,23 +1,37 @@
-const pool = require("../database/db");
+const prisma = require("../database/prisma");
 
 module.exports = {
   listarPrioridades: async () => {
-    const resultado = await pool.query("SELECT * FROM prioridade ORDER BY id");
-    return resultado.rows;
+    return prisma.prioridade.findMany({
+      orderBy: { id: "asc" },
+    });
   },
+
   buscarPorId: async (id) => {
-    const resultado = await pool.query("SELECT * FROM prioridade WHERE id = $1", [id]);
-    return resultado.rows[0];
+    return prisma.prioridade.findUnique({
+      where: { id: Number(id) },
+    });
   },
+
   criarPrioridade: async ({ descricao, ativo }) => {
-    const resultado = await pool.query("INSERT INTO prioridade (descricao, ativo) VALUES ($1, $2) RETURNING *", [descricao, ativo || true]);
-    return resultado.rows[0];
+    return prisma.prioridade.create({
+      data: {
+        descricao,
+        ativo: ativo ?? true,
+      },
+    });
   },
+
   atualizarPrioridade: async (id, { descricao, ativo }) => {
-    const resultado = await pool.query("UPDATE prioridade SET descricao = $1, ativo = $2 WHERE id = $3 RETURNING *", [descricao, ativo, id]);
-    return resultado.rows[0];
+    return prisma.prioridade.update({
+      where: { id: Number(id) },
+      data: { descricao, ativo },
+    });
   },
+
   deletarPrioridade: async (id) => {
-    await pool.query("DELETE FROM prioridade WHERE id = $1", [id]);
+    return prisma.prioridade.delete({
+      where: { id: Number(id) },
+    });
   },
 };

@@ -17,15 +17,15 @@ const prioridadesController = {
     res.json(prioridade);
   },
 
-    async criarPrioridade(req, res) {
+  async criarPrioridade(req, res) {
     const { descricao, ativo } = req.body;
-    if (!descricao) {
-      throw criarErro(400, "Descrição é obrigatória");
-    }
 
-    const novaPrioridade = await prioridadesModel.criarPrioridade({ descricao, ativo });
+    const novaPrioridade = await prioridadesModel.criarPrioridade({
+      descricao,
+      ativo,
+    });
     res.status(201).json(novaPrioridade);
-    },
+  },
 
   async atualizarPrioridade(req, res) {
     const { id } = req.params;
@@ -36,7 +36,10 @@ const prioridadesController = {
       throw criarErro(404, "Prioridade não encontrada");
     }
 
-    const prioridadeAtualizada = await prioridadesModel.atualizarPrioridade(id, { descricao, ativo });
+    const prioridadeAtualizada = await prioridadesModel.atualizarPrioridade(id, {
+      descricao,
+      ativo,
+    });
     res.json(prioridadeAtualizada);
   },
 
