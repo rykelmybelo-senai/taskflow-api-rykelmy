@@ -1,15 +1,15 @@
 const prisma = require("../database/prisma");
-
+const formatarTarefa = require("../src/utils/formatarTarefa");
 // Função utilitária para manter o formato do JSON esperado pelo Front-end
-function formatarTarefa(tarefa) {
-  const { projetos, usuarios, prioridade, ...resto } = tarefa;
-  return {
-    ...resto,
-    projeto: projetos?.nome,
-    usuario: usuarios?.nome,
-    prioridade: prioridade?.descricao,
-  };
-}
+// function formatarTarefa(tarefa) {
+//   const { projetos, usuarios, prioridade, ...resto } = tarefa;
+//   return {
+//     ...resto,
+//     projeto: projetos?.nome,
+//     usuario: usuarios?.nome,
+//     prioridade: prioridade?.descricao,
+//   };
+// }
 
 module.exports = {
   listarTarefas: async () => {
