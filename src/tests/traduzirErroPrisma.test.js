@@ -17,8 +17,8 @@ test("P2003 ao excluir (DELETE) vira 409", () => {
   expect(traduzirErroPrisma(erroP2003, "DELETE").status).toBe(409);
 });
 
-test("P2005 (registro não encontrado) vira 404", () => {
-  const erro = traduzirErroPrisma({ code: "P2005" }, "PUT");
+test("P2025 (registro não encontrado) vira 404", () => {
+  const erro = traduzirErroPrisma({ code: "P2025" }, "PUT");
   expect(erro.status).toBe(404);
 });
 

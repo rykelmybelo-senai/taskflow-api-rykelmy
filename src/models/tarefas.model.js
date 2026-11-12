@@ -1,5 +1,5 @@
 const prisma = require("../database/prisma");
-const formatarTarefa = require("../src/utils/formatarTarefa");
+const formatarTarefa = require("../utils/formatarTarefa");
 // Função utilitária para manter o formato do JSON esperado pelo Front-end
 // function formatarTarefa(tarefa) {
 //   const { projetos, usuarios, prioridade, ...resto } = tarefa;
@@ -17,7 +17,7 @@ module.exports = {
       include: {
         projetos: { select: { nome: true } },
         usuarios: { select: { nome: true } },
-        prioridade: { select: { descricao: true } },
+        prioridade: { select: { descricao: true, cor: true } },
       },
       orderBy: { id: "asc" },
     });
@@ -45,7 +45,7 @@ module.exports = {
       include: {
         projetos: { select: { nome: true } },
         usuarios: { select: { nome: true } },
-        prioridade: { select: { descricao: true } },
+        prioridade: { select: { descricao: true, cor: true } },
       },
     });
 

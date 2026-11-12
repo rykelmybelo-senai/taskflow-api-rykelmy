@@ -1,11 +1,14 @@
+const traduzirErroPrisma = require("../utils/traduzirErroPrisma");
+
 function tratarErros(erro, req, res, next) {
-  const status = erro.status || 500;
+  const erroTratado = traduzirErroPrisma(erro, req.method);
+  const status = erroTratado.status || 500;
 
-  console.error("[ERRO]", req.method, req.url, erro.message);
+  console.error("[ERRO]", req.method, req.url, erroTratado.message);
 
-  const mensagem = status === 500 ? "Erro interno no servidor" : erro.message;
+  const mensagem = status === 500 ? "Erro interno no servidor" : erroTratado.message;
 
-  res.status(status).json({ erro: { mensagem, detalhes: erro.detalhes } });
+  res.status(status).json({ erro: { mensagem, detalhes: erroTratado.detalhes } });
   console.error(erro);
 }
 

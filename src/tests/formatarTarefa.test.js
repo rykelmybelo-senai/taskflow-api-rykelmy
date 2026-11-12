@@ -1,4 +1,4 @@
-const formatarTarefa = require("src/utils/formatarTarefa");
+const formatarTarefa = require("../utils/formatarTarefa");
 
 function tarefaDoPrisma() {
   return {
@@ -27,15 +27,16 @@ test("achata as relações no formato que o frontend espera", () => {
     projeto: "TaskFlow",
     usuario: "Ana Lima",
     prioridade: "Alta",
-    prioridade_cor: "#FF0000",
+    cor: "#FF0000",
   });
 });
 
 test("deixa o campo undefined quando a relação não veio", () => {
   const tarefa = tarefaDoPrisma();
-  delete tarefa.projetos;
+  delete tarefa.prioridade;
   const resultado = formatarTarefa(tarefa);
   expect(resultado.prioridade).toBeUndefined();
+  expect(resultado.cor).toBeUndefined();
   expect(resultado.projeto).toBe("TaskFlow");
 });
 

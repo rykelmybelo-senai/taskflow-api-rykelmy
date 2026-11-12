@@ -5,7 +5,7 @@ function formatarTarefa(tarefa) {
     projeto: projetos?.nome,
     usuario: usuarios?.nome,
     prioridade: prioridade?.descricao,
-    prioridade_cor: prioridade?.cor,
+    cor: prioridade?.cor,
   };
 }
 module.exports = formatarTarefa;

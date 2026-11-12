@@ -15,7 +15,7 @@ function traduzirErroPrisma(erro, metodo) {
       );
     return criarErro(400, "Um dos ids informados não existe");
   }
-  if (erro.code === "P2005") {
+  if (erro.code === "P2025") {
     return criarErro(404, "Registro não encontrado");
   }
   return erro;
