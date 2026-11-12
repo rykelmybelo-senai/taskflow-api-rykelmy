@@ -51,6 +51,13 @@ app.use(logger);
 // Documentação
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(openapi));
 
+app.get("/", (req, res) => {
+  res.json({
+    mensagem: "TaskFlow API rodando",
+    documentacao: "/docs",
+  });
+});
+
 // Rotas públicas
 app.use("/auth", authRoutes);
 

@@ -8,7 +8,8 @@ function validar(schema, origem) {
     for (const campo in schema) {
       const regras = schema[campo];
       const valor = dados[campo];
-      const ausente = valor === undefined || valor === null || valor === "";
+      const stringVazia = typeof valor === "string" && valor.trim() === "";
+      const ausente = valor === undefined || valor === null || stringVazia;
 
       if (regras.obrigatorio && ausente) {
         erros.push(`O campo '${campo}' é obrigatório`);
@@ -41,13 +42,15 @@ function validar(schema, origem) {
           erros.push(`O campo '${campo}' deve ser um email válido`);
       }
 
-      if (regras.minLength && valor.length < regras.minLength) {
+      const tamanho =
+        typeof valor === "string" ? valor.trim().length : valor.length;
+      if (regras.minLength && tamanho < regras.minLength) {
         erros.push(
           `O campo '${campo}' deve ter ao menos ${regras.minLength} caracteres`,
         );
       }
 
-      if (regras.maxLength && valor.length > regras.maxLength) {
+      if (regras.maxLength && tamanho > regras.maxLength) {
         erros.push(
           `O campo '${campo}' deve ter no máximo ${regras.maxLength} caracteres`,
         );

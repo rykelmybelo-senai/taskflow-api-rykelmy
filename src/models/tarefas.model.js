@@ -67,7 +67,7 @@ module.exports = {
 
     return prisma.tarefas.create({
       data: {
-        texto,
+        texto: texto.trim(),
         prioridade_id: Number(prioridade_id) || 2,
         coluna: coluna || "afazer",
         usuario_id: Number(usuario_id),
@@ -110,7 +110,7 @@ module.exports = {
     return prisma.tarefas.update({
       where: { id: Number(id) },
       data: {
-        texto: dadosAtualizados.texto,
+        texto: dadosAtualizados.texto?.trim(),
         prioridade_id: Number(dadosAtualizados.prioridade_id),
         coluna: dadosAtualizados.coluna,
         usuario_id: Number(dadosAtualizados.usuario_id),
