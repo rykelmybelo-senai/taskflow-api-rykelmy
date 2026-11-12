@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./src/docs/swagger");
 
 const authRoutes = require("./src/routes/auth.routes");
 const tarefasRoutes = require("./src/routes/tarefas.routes");
@@ -18,7 +18,6 @@ const logger = require("./src/middlewares/logger");
 const validarContentType = require("./src/middlewares/validarContentType");
 const temporizador = require("./src/middlewares/temporizador");
 
-const openapi = require("./src/docs/openapi");
 const pool = require("./src/database/db");
 
 const app = express();
@@ -49,7 +48,7 @@ app.use(temporizador);
 app.use(logger);
 
 // Documentação
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(openapi));
+app.use("/docs", swaggerDocs);
 
 app.get("/", (req, res) => {
   res.json({

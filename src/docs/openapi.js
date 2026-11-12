@@ -14,7 +14,8 @@ module.exports = {
   },
 
   servers: [
-    { url: "http://localhost:3000", description: "Ambiente Local" },
+    // { url: "http://localhost:3000", description: "Ambiente Local" },
+    { url: "https://taskflow-api-rykelmy.vercel.app", description: "Ambiente de Produção" },
   ],
 
   security: [{ bearerAuth: [] }],
