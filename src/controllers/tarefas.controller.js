@@ -48,7 +48,7 @@ const tarefasController = {
   },
 
   async criarTarefa(req, res) {
-    const { texto, prioridade_id, coluna, usuario_id, projeto_id, cidade, ordem } =
+    const { texto, prioridade_id, coluna, usuario_id, projeto_id, ordem } =
       req.body;
 
     // Regra de negócio: impede criação se já houver tarefa em andamento
@@ -68,7 +68,6 @@ const tarefasController = {
       coluna,
       usuario_id: req.usuario?.id || usuario_id, // Utiliza o ID autenticado se disponível
       projeto_id,
-      cidade,
       ordem,
     });
 

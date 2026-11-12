@@ -58,26 +58,30 @@ module.exports = {
     coluna,
     usuario_id,
     projeto_id,
-    cidade,
     ordem,
   }) => {
     const iniciadoEm = coluna === "andamento" ? new Date().toISOString() : null;
     const concluidaEm =
       coluna === "concluido" ? new Date().toISOString() : null;
 
-    return prisma.tarefas.create({
+    const novaTarefa = await prisma.tarefas.create({
       data: {
         texto: texto.trim(),
         prioridade_id: Number(prioridade_id) || 2,
         coluna: coluna || "afazer",
         usuario_id: Number(usuario_id),
         projeto_id: Number(projeto_id),
-        cidade: cidade || null,
         ordem: Number(ordem) || 0,
         iniciado_em: iniciadoEm,
         concluida_em: concluidaEm,
       },
+      include: {
+        projetos: { select: { nome: true } },
+        usuarios: { select: { nome: true } },
+        prioridade: { select: { descricao: true, cor: true } },
+      },
     });
+    return formatarTarefa(novaTarefa);
   },
 
   atualizarTarefa: async (id, dadosAtualizados) => {
@@ -107,7 +111,7 @@ module.exports = {
       iniciadoEm = new Date().toISOString();
     }
 
-    return prisma.tarefas.update({
+    const atualizada = await prisma.tarefas.update({
       where: { id: Number(id) },
       data: {
         texto: dadosAtualizados.texto?.trim(),
@@ -115,11 +119,16 @@ module.exports = {
         coluna: dadosAtualizados.coluna,
         usuario_id: Number(dadosAtualizados.usuario_id),
         projeto_id: Number(dadosAtualizados.projeto_id),
-        cidade: dadosAtualizados.cidade,
         concluida_em: concluidaEm,
         iniciado_em: iniciadoEm,
       },
+      include: {
+        projetos: { select: { nome: true } },
+        usuarios: { select: { nome: true } },
+        prioridade: { select: { descricao: true, cor: true } },
+      },
     });
+    return formatarTarefa(atualizada);
   },
 
   deletarTarefa: async (id) => {
