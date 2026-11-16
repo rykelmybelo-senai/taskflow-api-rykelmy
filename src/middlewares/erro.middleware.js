@@ -1,14 +1,18 @@
+const { Prisma } = require("@prisma/client");
 const traduzirErroPrisma = require("../utils/traduzirErroPrisma");
 
 function tratarErros(erro, req, res, next) {
-  const erroTratado = traduzirErroPrisma(erro, req.method);
-  const status = erroTratado.status || 500;
+  if (erro instanceof Prisma.PrismaClientKnownRequestError) {
+    erro = traduzirErroPrisma(erro, req.method);
+  }
+  // const erroTratado = traduzirErroPrisma(erro, req.method);
+  const status = erro.status || 500;
 
-  console.error("[ERRO]", req.method, req.url, erroTratado.message);
+  console.error("[ERRO]", req.method, req.url, erro.message);
 
-  const mensagem = status === 500 ? "Erro interno no servidor" : erroTratado.message;
+  const mensagem = status === 500 ? "Erro interno no servidor" : erro.message;
 
-  res.status(status).json({ erro: { mensagem, detalhes: erroTratado.detalhes } });
+  res.status(status).json({ erro: { mensagem, detalhes: erro.detalhes } });
   console.error(erro);
 }
 
